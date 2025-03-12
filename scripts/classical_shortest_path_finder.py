@@ -16,3 +16,17 @@ def _build_arg_parser():
     p.add_argument('--obstacle_ratio', type=float, default=0.2, help="Obstacle ratio (use if 'obstacle_mode' is 'ratio')")
     p.add_argument('--obstacle_number', type=int, default=20, help="Number of obstacles (use if 'obstacle_mode' is 'number')")
     return p
+
+def main():
+    parser = _build_arg_parser()
+    args = parser.parse_args()
+
+    if args.mode == 'ratio':
+        result = circle_area(args.radius)
+        print(f"L'aire du cercle de rayon {args.radius} est : {result:.2f}")
+    elif args.mode == 'number':
+        result = circle_perimeter(args.radius)
+        print(f"Le périmètre du cercle de rayon {args.radius} est : {result:.2f}")
+
+if __name__ == "__main__":
+    main()
