@@ -21,7 +21,7 @@ def main():
     parser = _build_arg_parser()
     args = parser.parse_args()
 
-    aire = circle_area(args.rayon)
+    aire = circle_area(args.radius)
     print(f"L'aire du cercle de rayon {args.radius} est : {aire:.2f}")
 
 if __name__ == "__main__":
