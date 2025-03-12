@@ -8,6 +8,7 @@ are Dijkstra and A*.
 
 import argparse
 import os
+from my_research.utils.grid_dijkstra import generer_grille
 
 def _build_arg_parser():
     p = argparse.ArgumentParser(
