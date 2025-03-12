@@ -21,12 +21,12 @@ def main():
     parser = _build_arg_parser()
     args = parser.parse_args()
 
-    if args.mode == 'ratio':
-        result = circle_area(args.radius)
-        print(f"L'aire du cercle de rayon {args.radius} est : {result:.2f}")
-    elif args.mode == 'number':
-        result = circle_perimeter(args.radius)
-        print(f"Le périmètre du cercle de rayon {args.radius} est : {result:.2f}")
+    grid, G = generer_grille(args.size, args.obstacle_mode, args.obstacle_ratio, args.obstacle_number)
+
+    # Afficher la grille générée et les noeuds du graph
+    print("Grille générée :")
+    print(grid)
+    print("Graph nodes:", list(G.nodes))
 
 if __name__ == "__main__":
     main()
