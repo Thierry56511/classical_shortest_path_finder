@@ -12,8 +12,7 @@ import os
 def _build_arg_parser():
     p = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
-    p.add_argument('radius', type=float, metavar='RADIUS',
-                   help='Radius of the circle.')
-    p.add_argument('--mode', choices=['area', 'perimeter'], required=True,
-                   help="Choose between 'area' to calculate the area or 'perimeter' to calculate the perimeter.")
+    p.add_argument('--obstacle_mode', choices=['ratio', 'number'], default='ratio', help="Obstacle mode selection ('ratio' or 'number')")
+    p.add_argument('--obstacle_ratio', type=float, default=0.2, help="Obstacle ratio (use if 'obstacle_mode' is 'ratio')")
+    p.add_argument('--obstacle_number', type=int, default=20, help="Number of obstacles (use if 'obstacle_mode' is 'number')")
     return p
