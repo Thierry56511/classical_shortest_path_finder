@@ -286,7 +286,7 @@ class GrilleApp:
         print('dijkstra')
         if self.start is None or self.target is None:
             return
-        self.evaluated_nodes, self.path_history = self.dijkstra_stepwise()
+        self.evaluated_nodes, self.path_history = dijkstra_stepwise(G=self.G, start=self.start, target=self.target, diagonal_mode=self.selection_diagonal_mode.get())
         if self.evaluated_nodes is None:
             print("⚠️ Aucun chemin trouvé entre le point de départ et l'arrivée.")
         else:
@@ -296,124 +296,13 @@ class GrilleApp:
 
     # Function to run Astar if selected
     def run_Astar(self):
-        
         print('Astar')
         if self.start is None or self.target is None:
             return
-        self.evaluated_nodes, self.path_history = self.astar_stepwise()
+        self.evaluated_nodes, self.path_history = astar_stepwise(G=self.G, start=self.start, target=self.target, diagonal_mode=self.selection_diagonal_mode.get())
         self.ani = FuncAnimation(self.fig, self.update_animation, frames=len(self.evaluated_nodes), 
                          interval=self.speed_var.get(), repeat=False)
         self.canvas.draw()
-    
-
-    # Dijkstra algorithm. The function returns a list of list of nodes to create the animation
-    def dijkstra_stepwise(self):
-        start_time = time.time()
-        distances = {node: float('inf') for node in self.G.nodes()}
-        distances[self.start] = 0
-        previous_nodes = {node: None for node in self.G.nodes()}
-        evaluated_nodes = []
-        path_to_current = []
-        priority_queue = [(0, self.start)]
-        heapq.heapify(priority_queue)
-
-        while priority_queue:
-            current_distance, current_node = heapq.heappop(priority_queue)
-            if current_node not in evaluated_nodes:
-                evaluated_nodes.append(current_node)
-            temp_path = []
-            node = current_node
-            while node is not None:
-                temp_path.append(node)
-                node = previous_nodes[node]
-            temp_path.reverse()
-            path_to_current.append(temp_path)
-            if current_node == self.target:
-                break
-            if self.selection_diagonal_mode.get() == "diagonal":
-                neighbors = list(self.get_neighbors_diagonal(current_node))
-            elif self.selection_diagonal_mode.get() == "nondiagonal":
-                neighbors = list(self.G.neighbors(current_node))
-    
-            for neighbor in neighbors:
-                 if neighbor not in evaluated_nodes:
-                    new_distance = current_distance + 1
-                    if new_distance < distances[neighbor]:
-                        distances[neighbor] = new_distance
-                        previous_nodes[neighbor] = current_node
-                        heapq.heappush(priority_queue, (new_distance, neighbor))
-        
-        if distances[self.target] == float('inf'):
-            print("⚠️ Aucun chemin trouvé entre le point de départ et l'arrivée.")
-            return None, None  # Retourner None pour indiquer l'absence de chemin
-    
-        end_time = time.time() 
-        execution_time = end_time - start_time
-        print(f"execution time of Dijkstra: {execution_time:.4f} secondes")
-        return evaluated_nodes, path_to_current
-    
-    # Astar algorihtm with Chebyshev heuristic. The function returns a list of lists of nodes to create the animation
-    def heuristic(self, current, target):
-        return max(abs(current[0] - target[0]), abs(current[1] - target[1]))
-        
-    def astar_stepwise(self):
-        start_time = time.time()
-        g_scores = {node: float('inf') for node in self.G.nodes()}
-        g_scores[self.start] = 0
-        
-        f_scores = {node: float('inf') for node in self.G.nodes()}
-        f_scores[self.start] = self.heuristic(self.start, self.target)
-        
-        previous_nodes = {node: None for node in self.G.nodes()}
-        evaluated_nodes = []
-        path_to_current = []
-        priority_queue = [(f_scores[self.start], self.start)]
-        heapq.heapify(priority_queue)
-
-        while priority_queue:
-            current_f_score, current_node = heapq.heappop(priority_queue)
-            
-            if current_node not in evaluated_nodes:
-                evaluated_nodes.append(current_node)
-            
-            temp_path = []
-            node = current_node
-            while node is not None:
-                temp_path.append(node)
-                node = previous_nodes[node]
-            temp_path.reverse()
-            path_to_current.append(temp_path)
-            
-            #print(f"Step {len(evaluated_nodes)}: Evaluated {current_node}, Path: {temp_path}")
-
-            if current_node == self.target:
-                break
-
-            if self.selection_diagonal_mode.get() == "diagonal":
-                neighbors = list(self.get_neighbors_diagonal(current_node))
-            elif self.selection_diagonal_mode.get() == "nondiagonal":
-                neighbors = list(self.G.neighbors(current_node))
-
-            for neighbor in neighbors:
-                move_cost = 1 if current_node[0] == neighbor[0] or current_node[1] == neighbor[1] else np.sqrt(2)
-                tentative_g_score = g_scores[current_node] + move_cost
-                if tentative_g_score < g_scores[neighbor]:
-                    previous_nodes[neighbor] = current_node
-                    g_scores[neighbor] = tentative_g_score
-                    f_scores[neighbor] = g_scores[neighbor] + self.heuristic(neighbor, self.target)
-                    heapq.heappush(priority_queue, (f_scores[neighbor], neighbor))
-        end_time = time.time()
-        execution_time = end_time - start_time
-        print(f"Execution time of A* : {execution_time:.4f} secondes")
-        return evaluated_nodes, path_to_current
-
-    # Returns neighbors with allowed diagonal moves
-    def get_neighbors_diagonal(self, node):
-        directions = [(0, 1), (1, 0), (0, -1), (-1, 0),(1, 1), (-1, -1), (1, -1), (-1, 1) ]
-        for dx, dy in directions:
-            neighbor = (node[0] + dx, node[1] + dy)
-            if neighbor in self.G.nodes():
-                yield neighbor
 
     # Animation that recreates the exact steps of the shortest path algorithm
     def update_animation(self, frame):
@@ -502,6 +391,126 @@ def generer_grille(size, obstacle_mode="ratio", obstacle_ratio=0.2, obstacle_num
                 G.remove_node((x, y))
         
     return grid, G
+
+# Dijkstra algorithm. The function returns a list of list of nodes to create the animation
+
+def dijkstra_stepwise(G, start, target, diagonal_mode = "nondiagonal"):
+    start_time = time.time()
+    distances = {node: float('inf') for node in G.nodes()}
+    distances[start] = 0
+    previous_nodes = {node: None for node in G.nodes()}
+    evaluated_nodes = []
+    path_to_current = []
+    priority_queue = [(0, start)]
+    heapq.heapify(priority_queue)
+
+    while priority_queue:
+        current_distance, current_node = heapq.heappop(priority_queue)
+        if current_node not in evaluated_nodes:
+            evaluated_nodes.append(current_node)
+        temp_path = []
+        node = current_node
+        while node is not None:
+            temp_path.append(node)
+            node = previous_nodes[node]
+        temp_path.reverse()
+        path_to_current.append(temp_path)
+        if current_node == target:
+            break
+        if diagonal_mode == "diagonal":
+                neighbors = list(get_neighbors_diagonal(current_node, G))
+        elif diagonal_mode == "nondiagonal":
+                neighbors = list(G.neighbors(current_node))
+    
+        for neighbor in neighbors:
+            if neighbor not in evaluated_nodes:
+                new_distance = current_distance + 1
+                if new_distance < distances[neighbor]:
+                    distances[neighbor] = new_distance
+                    previous_nodes[neighbor] = current_node
+                    heapq.heappush(priority_queue, (new_distance, neighbor))
+        
+    if distances[target] == float('inf'):
+        print("⚠️ Aucun chemin trouvé entre le point de départ et l'arrivée.")
+        return None, None  # Retourner None pour indiquer l'absence de chemin
+    
+    end_time = time.time() 
+    execution_time = end_time - start_time
+    print(f"execution time of Dijkstra: {execution_time:.4f} secondes")
+    return evaluated_nodes, path_to_current
+
+# Astar algorihtm with Chebyshev heuristic. The function returns a list of lists of nodes to create the animation
+def heuristic(current, target):
+    return max(abs(current[0] - target[0]), abs(current[1] - target[1]))
+        
+def astar_stepwise(G, start, target, diagonal_mode="nondiagonal"):
+    start_time = time.time()
+    g_scores = {node: float('inf') for node in G.nodes()}
+    g_scores[start] = 0
+        
+    f_scores = {node: float('inf') for node in G.nodes()}
+    f_scores[start] = heuristic(start, target)
+        
+    previous_nodes = {node: None for node in G.nodes()}
+    evaluated_nodes = []
+    path_to_current = []
+    priority_queue = [(f_scores[start], start)]
+    heapq.heapify(priority_queue)
+
+    while priority_queue:
+        current_f_score, current_node = heapq.heappop(priority_queue)
+            
+        if current_node not in evaluated_nodes:
+            evaluated_nodes.append(current_node)
+            
+        temp_path = []
+        node = current_node
+        while node is not None:
+            temp_path.append(node)
+            node = previous_nodes[node]
+        temp_path.reverse()
+        path_to_current.append(temp_path)
+            
+        #print(f"Step {len(evaluated_nodes)}: Evaluated {current_node}, Path: {temp_path}")
+
+        if current_node == target:
+            break
+
+        if diagonal_mode == "diagonal":
+            neighbors = list(get_neighbors_diagonal(current_node, G))
+        elif diagonal_mode == "nondiagonal":
+            neighbors = list(G.neighbors(current_node))
+
+        for neighbor in neighbors:
+            move_cost = 1 if current_node[0] == neighbor[0] or current_node[1] == neighbor[1] else np.sqrt(2)
+            tentative_g_score = g_scores[current_node] + move_cost
+            if tentative_g_score < g_scores[neighbor]:
+                previous_nodes[neighbor] = current_node
+                g_scores[neighbor] = tentative_g_score
+                f_scores[neighbor] = g_scores[neighbor] + heuristic(neighbor, target)
+                heapq.heappush(priority_queue, (f_scores[neighbor], neighbor))
+    end_time = time.time()
+    execution_time = end_time - start_time
+    print(f"Execution time of A* : {execution_time:.4f} secondes")
+    return evaluated_nodes, path_to_current
+    
+# Returns neighbors with allowed diagonal moves
+def get_neighbors_diagonal(node, G):
+    directions = [(0, 1), (1, 0), (0, -1), (-1, 0),(1, 1), (-1, -1), (1, -1), (-1, 1) ]
+    for dx, dy in directions:
+            neighbor = (node[0] + dx, node[1] + dy)
+            if neighbor in G.nodes():
+                yield neighbor
+
+def save_graph(G, output_file):
+    """Sauvegarde un graphe networkx dans un fichier JSON."""
+    data = {
+        "nodes": list(G.nodes()),
+        "edges": list(G.edges())
+    }
+
+    with open(output_file, "w") as f:
+        json.dump(data, f, indent=4)
 
 if __name__ == "__main__":
     root = tk.Tk()
