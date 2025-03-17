@@ -7,7 +7,7 @@ Generate random grids/graphs with obstacles.
 
 import argparse
 import os
-from my_research.utils.grid_dijkstra import generer_grille
+from my_research.utils.grid_dijkstra import (generer_grille, save_grid)
 
 def _build_arg_parser():
     p = argparse.ArgumentParser(
@@ -16,6 +16,7 @@ def _build_arg_parser():
     p.add_argument('--obstacle_mode', choices=['ratio', 'number'], default='ratio', help="Obstacle mode selection ('ratio' or 'number')")
     p.add_argument('--obstacle_ratio', type=float, default=0.2, help="Obstacle ratio (use if 'obstacle_mode' is 'ratio')")
     p.add_argument('--obstacle_number', type=int, default=20, help="Number of obstacles (use if 'obstacle_mode' is 'number')")
+    p.add_argument("--output", type=str, required=True, help="Name of the file (ex: graph.json)")
     return p
 
 def main():
