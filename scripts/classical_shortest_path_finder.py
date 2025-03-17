@@ -24,7 +24,8 @@ def main():
     args = parser.parse_args()
 
     grid, G = generer_grille(args.size, args.obstacle_mode, args.obstacle_ratio, args.obstacle_number)
-
+    save_graphe(G, args.output)
+    print(f"✅ Graphe sauvegardé dans '{args.output}'.")
     # Afficher la grille générée et les noeuds du graph
     print("Grille générée :")
     print(grid)
