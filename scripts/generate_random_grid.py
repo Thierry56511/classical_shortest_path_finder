@@ -9,6 +9,7 @@ import argparse
 import os
 from my_research.utils.grid_dijkstra import dijkstra_stepwise
 from my_research.utils.grid_dijkstra import astar_stepwise
+from my_research.utils.grid_dijkstra import heuristic
 
 def _build_arg_parser():
     p = argparse.ArgumentParser(
