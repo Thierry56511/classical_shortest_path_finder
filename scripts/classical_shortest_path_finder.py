@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Generate random grids/graphs with obstacles and find its shortest path. The classical shortest path algotithms
-are Dijkstra and A*.
+Generate random grids/graphs with obstacles.
 """
 
 import argparse
