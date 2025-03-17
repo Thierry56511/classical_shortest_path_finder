@@ -7,7 +7,7 @@ Generate random grids/graphs with obstacles.
 
 import argparse
 import os
-from my_research.utils.grid_dijkstra import (generer_grille, save_grid)
+from my_research.utils.grid_dijkstra import (generer_grille, save_graph)
 
 def _build_arg_parser():
     p = argparse.ArgumentParser(
@@ -24,7 +24,7 @@ def main():
     args = parser.parse_args()
 
     grid, G = generer_grille(args.size, args.obstacle_mode, args.obstacle_ratio, args.obstacle_number)
-    save_graphe(G, args.output)
+    save_graph(G, args.output)
     print(f"✅ Graphe sauvegardé dans '{args.output}'.")
     # Afficher la grille générée et les noeuds du graph
     print("Grille générée :")
