@@ -22,7 +22,7 @@ def main():
     args = parser.parse_args()
 
     
-    G = load_graph(args.size, args.obstacle_mode, args.obstacle_ratio, args.obstacle_number)
+    G = load_graph(args.input)
     save_graphe(G, args.output)
     # Afficher la grille générée et les noeuds du graph
     print("Grille générée :")
