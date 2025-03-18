@@ -367,19 +367,15 @@ class GrilleApp:
         self.canvas.draw()
 
 def generer_grille(size, obstacle_mode="ratio", obstacle_ratio=0.2, obstacle_number=20):
-    # Créer la grille
     n = size
-    grid = np.zeros((n, n))  # Grille initiale
-    G = nx.grid_2d_graph(n, n)  # Créer le graph
+    grid = np.zeros((n, n))  
+    G = nx.grid_2d_graph(n, n)  
 
-    # Générer des obstacles
     obstacles = set()
 
-    if obstacle_mode == "ratio":
-        # Calculer le nombre d'obstacles en fonction du ratio
+    if obstacle_mode == "ratio": 
         num_obstacles = int(n * n * obstacle_ratio)
     else:
-        # Si on utilise un nombre fixe d'obstacles
         num_obstacles = obstacle_number
 
     while len(obstacles) < num_obstacles:
@@ -503,7 +499,6 @@ def get_neighbors_diagonal(node, G):
                 yield neighbor
 
 def save_graph(G, output_file):
-    """Sauvegarde un graphe networkx dans un fichier JSON."""
     data = {
         "nodes": list(G.nodes()),
         "edges": list(G.edges())
@@ -512,8 +507,7 @@ def save_graph(G, output_file):
     with open(output_file, "w") as f:
         json.dump(data, f, indent=4)
 
-def charger_graphe(input_file):
-    """Charge un graphe NetworkX à partir d'un fichier JSON."""
+def load_graph(input_file):
     with open(input_file, "r") as f:
         data = json.load(f)
 
