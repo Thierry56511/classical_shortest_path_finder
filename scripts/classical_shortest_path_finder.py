@@ -34,7 +34,7 @@ def main():
         evaluated_nodes, path_history = astar_stepwise(G, start, target, args.diagonal_mode)
     
     print("path history :")
-    print(path_history[len(path_history)])
+    print(path_history[len(path_history)-1])
     print(path_history)
 
 if __name__ == "__main__":
