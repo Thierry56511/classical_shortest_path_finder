@@ -29,9 +29,9 @@ def main():
     G = load_graph(args.input)
     
     if args.shortestpath == "Dijkstra":
-        shortest_path = dijkstra_stepwise(G, args.start, args.target, args.diagonal_mode)
+        shortest_path = dijkstra_stepwise(G, start, target, args.diagonal_mode)
     elif args.shortestpath == "A*":
-        shortest_path = astar_stepwise(G, args.start, args.target, args.diagonal_mode)
+        shortest_path = astar_stepwise(G, start, target, args.diagonal_mode)
     
     print("Shortest path :")
     print(shortest_path)
