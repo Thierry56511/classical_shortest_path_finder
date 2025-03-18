@@ -512,6 +512,17 @@ def save_graph(G, output_file):
     with open(output_file, "w") as f:
         json.dump(data, f, indent=4)
 
+def charger_graphe(input_file):
+    """Charge un graphe NetworkX à partir d'un fichier JSON."""
+    with open(input_file, "r") as f:
+        data = json.load(f)
+
+    G = nx.Graph()
+    G.add_nodes_from(data["nodes"])
+    G.add_edges_from(data["edges"])
+    
+    return G
+
 if __name__ == "__main__":
     root = tk.Tk()
     app = GrilleApp(root)
