@@ -512,8 +512,13 @@ def load_graph(input_file):
         data = json.load(f)
 
     G = nx.Graph()
-    G.add_nodes_from(data["nodes"])
-    G.add_edges_from(data["edges"])
+
+    # Convertir les nœuds de listes en tuples
+    nodes = [tuple(node) for node in data["nodes"]]
+    edges = [(tuple(edge[0]), tuple(edge[1])) for edge in data["edges"]]
+
+    G.add_nodes_from(nodes)
+    G.add_edges_from(edges)
     
     return G
 
