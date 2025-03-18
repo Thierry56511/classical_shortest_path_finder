@@ -13,7 +13,7 @@ def _build_arg_parser():
     p = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
     p.add_argument("--input", type=str, required=True, help="Name of the file JSON containing the graph")
-    p.add_argument("--shortestpath", type=str, required=True, help="Name of the file JSON containing the graph")
+    p.add_argument("--shortestpath", choices=['Dijkstra', 'A*'], default='Dijkstra', help="shortest path algorithm selection ('Dijkstra' or 'A*')")
     return p
 
 def main():
