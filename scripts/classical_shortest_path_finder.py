@@ -29,12 +29,14 @@ def main():
     G = load_graph(args.input)
     
     if args.shortestpath == "Dijkstra":
-        shortest_path = dijkstra_stepwise(G, start, target, args.diagonal_mode)
+        evaluated_nodes, path_history = dijkstra_stepwise(G, start, target, args.diagonal_mode)
     elif args.shortestpath == "A*":
-        shortest_path = astar_stepwise(G, start, target, args.diagonal_mode)
+        evaluated_nodes, path_history = astar_stepwise(G, start, target, args.diagonal_mode)
     
-    print("Shortest path :")
-    print(shortest_path)
+    print("evaluated nodes :")
+    print(evaluated_nodes)
+    print("path history :")
+    print(path_history)
 
 if __name__ == "__main__":
     main()
