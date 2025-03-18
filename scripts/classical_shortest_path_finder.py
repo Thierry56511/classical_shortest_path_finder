@@ -23,6 +23,8 @@ def main():
     parser = _build_arg_parser()
     args = parser.parse_args()
 
+    start = tuple(map(int, args.start.split(',')))   
+    target = tuple(map(int, args.target.split(',')))
     
     G = load_graph(args.input)
     
