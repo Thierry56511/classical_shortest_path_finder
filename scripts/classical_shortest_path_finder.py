@@ -33,8 +33,9 @@ def main():
     elif args.shortestpath == "A*":
         evaluated_nodes, path_history = astar_stepwise(G, start, target, args.diagonal_mode)
     
-    print("path history :")
+    print("shortest path :")
     print(path_history[len(path_history)-1])
+    print("path history :")
     print(path_history)
 
 if __name__ == "__main__":
