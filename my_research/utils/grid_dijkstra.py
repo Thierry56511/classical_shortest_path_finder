@@ -498,14 +498,16 @@ def get_neighbors_diagonal(node, G):
             if neighbor in G.nodes():
                 yield neighbor
 
-def save_graph(G, output_file):
-    data = {
-        "nodes": list(G.nodes()),
-        "edges": list(G.edges())
-    }
-
-    with open(output_file, "w") as f:
-        json.dump(data, f, indent=4)
+def save_graph(G, output_base, copies=1):
+    for i in range(copies):
+        output_file = f"{output_base}_{i}.json"  
+        data = {
+            "nodes": list(G.nodes()),
+            "edges": list(G.edges())
+        }
+        with open(output_file, "w") as f:
+            json.dump(data, f, indent=4)
+        print(f"✅ Copie {i+1}/{copies} saved as '{output_file}'.")
 
 def load_graph(input_file):
     with open(input_file, "r") as f:
