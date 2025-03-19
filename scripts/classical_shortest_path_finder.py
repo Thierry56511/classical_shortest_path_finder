@@ -12,7 +12,7 @@ from my_research.utils.grid_dijkstra import (dijkstra_stepwise, astar_stepwise, 
 def _build_arg_parser():
     p = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
-    p.add_argument("--input", type=str, required=True, help="Name of the file JSON containing the graph (ex: graph.json")
+    p.add_argument("--in_graph", type=str, required=True, help="Name of the file JSON containing the graph (ex: graph.json")
     p.add_argument("--shortestpath", choices=['Dijkstra', 'A*'], default='Dijkstra', help="shortest path algorithm selection ('Dijkstra' or 'A*')")
     p.add_argument("--start", type=str, required=True, help="starting node (ex: '3,4')") 
     p.add_argument("--target", type=str, required=True, help="ending node (ex: '7,8')")
@@ -23,10 +23,13 @@ def main():
     parser = _build_arg_parser()
     args = parser.parse_args()
 
+    if not os.path.isfile(args.in_graph):
+        raise IOError('{} does not exist!'.format(args.in_graph))
+
     start = tuple(map(int, args.start.split(',')))   
     target = tuple(map(int, args.target.split(',')))
     
-    G = load_graph(args.input)
+    G = load_graph(args.in_graph)
     
     if args.shortestpath == "Dijkstra":
         evaluated_nodes, path_history = dijkstra_stepwise(G, start, target, args.diagonal_mode)
