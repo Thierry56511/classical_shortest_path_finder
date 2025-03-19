@@ -28,7 +28,7 @@ def main():
     if mode == 'ratio' and value > 1:
         raise IOError('The obstacle ratio should not higher than 1.0'.format(args.obstacles))
 
-    file, number = args.obstacles.split(';')
+    file, number = args.output.split(';')
     number = int(number)
     file = str(file)
 
