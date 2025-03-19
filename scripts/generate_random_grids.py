@@ -25,6 +25,9 @@ def main():
     mode, value = args.obstacles.split(':')
     value = float(value) if mode == 'ratio' else int(value)
 
+    if mode == 'ratio' and value > 1:
+        raise IOError('The obstacle ratio should not higher than 1.0'.format(args.obstacles))
+
     grid, G = generer_grille(args.size, mode, value, value)
     save_graph(G, args.output)
     print(f"✅ Graphe sauvegardé dans '{args.output}'.")
