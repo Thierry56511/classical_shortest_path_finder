@@ -23,25 +23,25 @@ def main():
     parser = _build_arg_parser()
     args = parser.parse_args()
 
-    # Parsing obstacles argument
+    
     mode, value = args.obstacles.split(':')
     value = float(value) if mode == 'ratio' else int(value)
     
     if mode == 'ratio' and value > 1:
         raise IOError(f'The obstacle ratio should not be higher than 1.0 (received: {args.obstacles})')
 
-    # Parsing output argument
+   
     file, number = args.output.split(';')
     number = int(number)
 
-    # Générer la grille et le graphe
+   
     grid, G = generer_grille(args.size, mode, value) if mode == "ratio" else generer_grille(args.size, mode, value, value)
 
-    # Sauvegarde multiple
+   
     for i in range(number):
         save_graph(G, f"{file}_{i}.json")
     
-    print(f"✅ {number} graphes sauvegardés sous '{file}_X.json'.")
+    print(f"✅ {number} graphs saved as '{file}_X.json'.")
     print("Grille générée :")
     print(grid)
     print("Graph nodes:", list(G.nodes))
