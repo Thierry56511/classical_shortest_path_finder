@@ -521,10 +521,16 @@ def load_graph(file_path):
     elif file_path.endswith(".npz"):
         data = np.load(file_path, allow_pickle=True)
         adjacency_matrix = data['adjacency_matrix']
-        graph = {i: {j: adjacency_matrix[i, j] for j in range(len(adjacency_matrix[i])) if adjacency_matrix[i, j] > 0}
-                 for i in range(len(adjacency_matrix))}
-        return graph
+    
+        G = nx.Graph()  # Utilise nx.DiGraph() si le graphe est orienté
 
+        # Ajouter les arêtes pondérées au graphe
+        for i in range(len(adjacency_matrix)):
+            for j in range(len(adjacency_matrix[i])):
+                if adjacency_matrix[i, j] > 0:  # S'il y a une connexion
+                    G.add_edge((i,), (j,), weight=adjacency_matrix[i, j])
+    
+        return G
     else:
         raise ValueError("Unsupported file format. Use either .json or .npz")
 if __name__ == "__main__":
