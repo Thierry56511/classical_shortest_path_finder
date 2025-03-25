@@ -509,21 +509,24 @@ def save_graph(G, output_base, copies=1):
             json.dump(data, f, indent=4)
         print(f"✅ Copie {i+1}/{copies} saved as '{output_file}'.")
 
-def load_graph(input_file):
-    with open(input_file, "r") as f:
-        data = json.load(f)
+import json
+import numpy as np
 
-    G = nx.Graph()
+def load_graph(file_path):
+    if file_path.endswith(".json"):
+        with open(file_path, 'r') as f:
+            graph = json.load(f)
+        return {int(k): {int(neigh): weight for neigh, weight in v.items()} for k, v in graph.items()}  # Conversion en int
 
-    # Convertir les nœuds de listes en tuples
-    nodes = [tuple(node) for node in data["nodes"]]
-    edges = [(tuple(edge[0]), tuple(edge[1])) for edge in data["edges"]]
+    elif file_path.endswith(".npz"):
+        data = np.load(file_path, allow_pickle=True)
+        adjacency_matrix = data['adjacency_matrix']
+        graph = {i: {j: adjacency_matrix[i, j] for j in range(len(adjacency_matrix[i])) if adjacency_matrix[i, j] > 0}
+                 for i in range(len(adjacency_matrix))}
+        return graph
 
-    G.add_nodes_from(nodes)
-    G.add_edges_from(edges)
-    
-    return G
-
+    else:
+        raise ValueError("Unsupported file format. Use either .json or .npz")
 if __name__ == "__main__":
     root = tk.Tk()
     app = GrilleApp(root)
