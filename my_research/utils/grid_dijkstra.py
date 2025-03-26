@@ -390,7 +390,10 @@ def generer_grille(size, obstacle_mode="ratio", obstacle_ratio=0.2, obstacle_num
 
 # Dijkstra algorithm. The function returns a list of list of nodes to create the animation
 
-def dijkstra_stepwise(G, start, target, diagonal_mode = "nondiagonal"):
+import heapq
+import time
+
+def dijkstra_stepwise(G, start, target, diagonal_mode="nondiagonal"):
     start_time = time.time()
     distances = {node: float('inf') for node in G.nodes()}
     distances[start] = 0
@@ -404,6 +407,8 @@ def dijkstra_stepwise(G, start, target, diagonal_mode = "nondiagonal"):
         current_distance, current_node = heapq.heappop(priority_queue)
         if current_node not in evaluated_nodes:
             evaluated_nodes.append(current_node)
+
+        # Reconstruction du chemin actuel
         temp_path = []
         node = current_node
         while node is not None:
@@ -411,29 +416,33 @@ def dijkstra_stepwise(G, start, target, diagonal_mode = "nondiagonal"):
             node = previous_nodes[node]
         temp_path.reverse()
         path_to_current.append(temp_path)
+
         if current_node == target:
             break
+
         if diagonal_mode == "diagonal":
-                neighbors = list(get_neighbors_diagonal(current_node, G))
-        elif diagonal_mode == "nondiagonal":
-                neighbors = list(G.neighbors(current_node))
-    
+            neighbors = list(get_neighbors_diagonal(current_node, G))
+        else:
+            neighbors = list(G.neighbors(current_node))
+
         for neighbor in neighbors:
             if neighbor not in evaluated_nodes:
-                new_distance = current_distance + 1
+                edge_weight = G[current_node][neighbor].get("weight", 1)  # Récupérer le poids réel
+                new_distance = current_distance + edge_weight
                 if new_distance < distances[neighbor]:
                     distances[neighbor] = new_distance
                     previous_nodes[neighbor] = current_node
                     heapq.heappush(priority_queue, (new_distance, neighbor))
-        
+
     if distances[target] == float('inf'):
         print("⚠️ Aucun chemin trouvé entre le point de départ et l'arrivée.")
         return None, None  # Retourner None pour indiquer l'absence de chemin
-    
-    end_time = time.time() 
+
+    end_time = time.time()
     execution_time = end_time - start_time
-    print(f"execution time of Dijkstra: {execution_time:.4f} secondes")
+    print(f"Execution time of Dijkstra: {execution_time:.4f} secondes")
     return evaluated_nodes, path_to_current
+
 
 # Astar algorihtm with Chebyshev heuristic. The function returns a list of lists of nodes to create the animation
 def heuristic(current, target):
@@ -528,7 +537,7 @@ def load_graph(file_path):
         for i in range(len(adjacency_matrix)):
             for j in range(len(adjacency_matrix[i])):
                 if adjacency_matrix[i, j] > 0:  # S'il y a une connexion
-                    G.add_edge((i,), (j,), weight=adjacency_matrix[i, j])
+                    G.add_edge(i, j, weight=adjacency_matrix[i, j])
     
         return G
     else:
