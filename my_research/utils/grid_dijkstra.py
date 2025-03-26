@@ -528,18 +528,24 @@ def load_graph(file_path):
         return {int(k): {int(neigh): weight for neigh, weight in v.items()} for k, v in graph.items()}  # Conversion en int
 
     elif file_path.endswith(".npz"):
+        # Charger les données du fichier npz
         data = np.load(file_path, allow_pickle=True)
+        print(f"Keys in the .npz file: {data.files}")  # Affiche les clés disponibles dans le fichier .npz
+
+        # Assurer que 'adjacency_matrix' est bien la clé correcte
         adjacency_matrix = data['adjacency_matrix']
-    
-        G = nx.Graph()  # Utilise nx.DiGraph() si le graphe est orienté
+        node_indices = data['node_indices']
+        vol_dims = data['vol_dims']
+        
+        G = nx.Graph()  # Utiliser nx.DiGraph() si le graphe est orienté
 
         # Ajouter les arêtes pondérées au graphe
         for i in range(len(adjacency_matrix)):
             for j in range(len(adjacency_matrix[i])):
                 if adjacency_matrix[i, j] > 0:  # S'il y a une connexion
-                    G.add_edge(i, j, weight=adjacency_matrix[i, j])
-    
-        return G
+                    G.add_edge(node_indices[i], node_indices[j], weight=adjacency_matrix[i, j])
+
+        return G, node_indices, vol_dims
     else:
         raise ValueError("Unsupported file format. Use either .json or .npz")
 if __name__ == "__main__":
