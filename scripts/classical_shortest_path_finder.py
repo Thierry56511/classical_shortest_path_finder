@@ -8,8 +8,6 @@ Find the shortest path between 2 points in a graph with Dijkstra or A*.
 import argparse
 import os
 import sys
-sys.path.append(r"C:\thierry\code\quactography")
-from data.test_graphs import test_graphs
 from my_research.utils.grid_dijkstra import (dijkstra_stepwise, astar_stepwise, heuristic, get_neighbors_diagonal, load_graph)
 
 def _build_arg_parser():
