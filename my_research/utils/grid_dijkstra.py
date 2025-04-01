@@ -522,7 +522,7 @@ import json
 import numpy as np
 
 def load_graph(file_path):
-    print(file_path)
+    return(file_path)
     '''if file_path.endswith(".json"):
         print('allo')
         with open(file_path, 'r') as f:
