@@ -522,7 +522,9 @@ import json
 import numpy as np
 
 def load_graph(file_path):
+    print(file_path)
     if file_path.endswith(".json"):
+        print('allo')
         with open(file_path, 'r') as f:
             graph = json.load(f)
         return {int(k): {int(neigh): weight for neigh, weight in v.items()} for k, v in graph.items()}  # Conversion en int
