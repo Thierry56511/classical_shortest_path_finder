@@ -30,7 +30,6 @@ def main():
     start = tuple(map(int, args.start.split(',')))   
     target = tuple(map(int, args.target.split(',')))
 
-    print(args.in_graph)
     G = load_graph(args.in_graph)
     
     if args.shortestpath == "Dijkstra":
