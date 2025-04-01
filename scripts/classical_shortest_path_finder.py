@@ -8,8 +8,7 @@ Find the shortest path between 2 points in a graph with Dijkstra or A*.
 import argparse
 import os
 import sys
-from my_research.utils.grid_dijkstra import (dijkstra_stepwise, astar_stepwise, heuristic, get_neighbors_diagonal, load_the_graph)
-
+from my_research.utils.grid_dijkstra import *
 def _build_arg_parser():
     p = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
