@@ -523,13 +523,13 @@ import numpy as np
 
 def load_graph(file_path):
     print(file_path)
-    if file_path.endswith(".json"):
+    '''if file_path.endswith(".json"):
         print('allo')
         with open(file_path, 'r') as f:
             graph = json.load(f)
-        return {int(k): {int(neigh): weight for neigh, weight in v.items()} for k, v in graph.items()}  # Conversion en int
+        return {int(k): {int(neigh): weight for neigh, weight in v.items()} for k, v in graph.items()}  # Conversion en int'''
 
-    elif file_path.endswith(".npz"):
+    '''elif file_path.endswith(".npz"):'''
         # Charger les données du fichier npz
         data = np.load(file_path, allow_pickle=True)
         print(f"Keys in the .npz file: {data.files}")  # Affiche les clés disponibles dans le fichier .npz
