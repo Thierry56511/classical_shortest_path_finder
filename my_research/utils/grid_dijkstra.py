@@ -521,18 +521,18 @@ def save_graph(G, output_base, copies=1):
 import json
 import numpy as np
 
-def load_graph(file_path):
+def load_the_graph(file_path):
     return(file_path)
-    '''if file_path.endswith(".json"):
+    if file_path.endswith(".json"):
         print('allo')
         with open(file_path, 'r') as f:
             graph = json.load(f)
-        return {int(k): {int(neigh): weight for neigh, weight in v.items()} for k, v in graph.items()}  # Conversion en int'''
+        return {int(k): {int(neigh): weight for neigh, weight in v.items()} for k, v in graph.items()}  # Conversion en int
 
-    '''elif file_path.endswith(".npz"):'''
+    elif file_path.endswith(".npz"):
         # Charger les données du fichier npz
-        #data = np.load(file_path, allow_pickle=True)
-        '''print(f"Keys in the .npz file: {data.files}")  # Affiche les clés disponibles dans le fichier .npz
+        data = np.load(file_path, allow_pickle=True)
+        print(f"Keys in the .npz file: {data.files}")  # Affiche les clés disponibles dans le fichier .npz
 
         # Assurer que 'adjacency_matrix' est bien la clé correcte
         adjacency_matrix = data['adjacency_matrix']
@@ -549,7 +549,7 @@ def load_graph(file_path):
 
         return G, node_indices, vol_dims
     else:
-        raise ValueError("Unsupported file format. Use either .json or .npz")'''
+        raise ValueError("Unsupported file format. Use either .json or .npz")
 if __name__ == "__main__":
     root = tk.Tk()
     app = GrilleApp(root)
