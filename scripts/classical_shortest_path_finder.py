@@ -30,7 +30,7 @@ def main():
     start = tuple(map(int, args.start.split(',')))   
     target = tuple(map(int, args.target.split(',')))
 
-    G, x, y = load_graph(args.in_graph)
+    G = load_graph(10)
     
     if args.shortestpath == "Dijkstra":
         evaluated_nodes, path_history = dijkstra_stepwise(G, start, target, args.diagonal_mode)
